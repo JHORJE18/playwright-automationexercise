@@ -35,6 +35,12 @@ test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
 
         await page.locator('form').filter({ hasText: 'Signup' }).locator('button').click();
 
+        /* Si la cuenta ya existe, elimina y provoca error para reiniciar la prueba */
+        if (await page.getByText('Email Address already exist!').isVisible()) {
+            await eliminarUsuarioPruebas(page, usuarioPrueba, false);
+            throw new Error('🔄 Reintentando prueba porque la cuenta ya existía.');
+        }
+
         /* Formulario completo de registro  */
         // Verifica información de la cuenta - Visible ✅
         await expect(page.getByRole('textbox', { name: 'Name *', exact: true })).toHaveValue(usuarioPrueba.name)
