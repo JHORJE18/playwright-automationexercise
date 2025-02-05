@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { beforeEach } from 'node:test';
 
 test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
 
