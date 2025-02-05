@@ -5,6 +5,13 @@ test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
 
     test.beforeEach(async ({ page }) => {
         await page.goto('/');
+
+        // Elimina dialogo aceptación de cookies
+        await page.waitForLoadState("domcontentloaded");
+        const dialogCookies = await page.locator('body > div > div.fc-dialog-container')
+        await expect(dialogCookies).toBeVisible();
+        await page.getByLabel('Consentir').click();
+        await expect(dialogCookies).not.toBeVisible();
     })
 
     test('Caso de prueba #1 - Registrar ususario', async ({ page }) => {
