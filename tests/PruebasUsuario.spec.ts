@@ -199,6 +199,11 @@ async function registrarUsuarioPruebas(page, usuario: cuenta) {
 
     await page.locator('form').filter({ hasText: 'Signup' }).locator('button').click();
 
+    // Validar si cuenta ya existe
+    if (await page.getByText('Email Address already exist!').isVisible()) {
+        return true;
+    }
+
     /* Formulario completo de registro  */
     await page.getByRole('radio', { name: 'Mr.' }).click();
     await page.getByRole('textbox', { name: 'Password *' }).fill(usuario.password);
