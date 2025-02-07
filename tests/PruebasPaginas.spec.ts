@@ -48,4 +48,24 @@ test.describe('Casos de prueba [6,7,25,26] - Pruebas de gestión de usuario', ()
         await page.getByRole('link', { name: ' Test Cases' }).click();
         await expect(page).toHaveURL(/.*\/test_cases/);
     })
+
+    test('Caso de prueba #25 - Verificar el desplazamiento hacia arriba con el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo', async ({ page }) => {
+        await page.waitForLoadState('domcontentloaded');
+        await expect(page.locator('#slider')).toBeVisible();
+        await page.locator('.grippy-host').click();
+        await page.locator('#footer').scrollIntoViewIfNeeded();
+        await expect(page.locator('#footer')).toContainText('Subscription');
+        await page.getByRole('link', { name: '' }).click();
+        await expect(page.getByRole('heading', { name: 'Full-Fledged practice website' })).toBeVisible();
+    })
+
+    test('Caso de prueba #26 - Verificar el desplazamiento hacia arriba sin el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo', async ({ page }) => {
+        await page.waitForLoadState('domcontentloaded');
+        await expect(page.locator('#slider')).toBeVisible();
+        await page.locator('.grippy-host').click();
+        await page.locator('#footer').scrollIntoViewIfNeeded();
+        await expect(page.locator('#footer')).toContainText('Subscription');
+        await page.locator('#header > div > div > div > div.col-sm-4 > div > a > img').scrollIntoViewIfNeeded();
+        await expect(page.getByRole('heading', { name: 'Full-Fledged practice website' })).toBeVisible();
+    })
 });
