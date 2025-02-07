@@ -1,18 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { aceptarCookies } from './utils';
 
 test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
 
     test.beforeEach(async ({ page }) => {
         await page.goto('/');
-
-        // Elimina dialogo aceptación de cookies
-        await page.waitForLoadState("domcontentloaded");
-
-        const dialogCookies = await page.locator('body > div > div.fc-dialog-container');
-        const buttonConsentCookies = await page.locator('body > div > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-footer-buttons-container > div.fc-footer-buttons > button.fc-button.fc-cta-consent.fc-primary-button > p');
-        await expect(dialogCookies).toBeVisible();
-        await buttonConsentCookies.click();
-        await expect(dialogCookies).not.toBeVisible();
+        await aceptarCookies(page);
     })
 
     test('Caso de prueba #1 - Registrar ususario', async ({ browserName, page }) => {

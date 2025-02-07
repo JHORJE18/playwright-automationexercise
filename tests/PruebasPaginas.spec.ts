@@ -1,13 +1,14 @@
 import { test, expect } from '@playwright/test';
 import { beforeEach } from 'node:test';
 import path from 'path';
+import { aceptarCookies } from './utils';
 
 test.describe('Casos de prueba [6,7,25,26] - Pruebas de gestión de usuario', () => {
 
     test.beforeEach(async ({ page }) => {
         // Go To -> https://www.automationexercise.com/
         await page.goto('/');
-        await aceptaCookies(page);
+        await aceptarCookies(page);
     })
 
     test('Caso de prueba #6 - Formulario de contacto', async ({ page }) => {
@@ -41,14 +42,3 @@ test.describe('Casos de prueba [6,7,25,26] - Pruebas de gestión de usuario', ()
         await expect(page).toHaveURL(/.*automationexercise\.com.*/);
     })
 });
-
-async function aceptaCookies(page) {
-    // Elimina dialogo aceptación de cookies
-    await page.waitForLoadState("domcontentloaded");
-
-    const dialogCookies = await page.locator('body > div > div.fc-dialog-container');
-    const buttonConsentCookies = await page.locator('body > div > div.fc-dialog-container > div.fc-dialog.fc-choice-dialog > div.fc-footer-buttons-container > div.fc-footer-buttons > button.fc-button.fc-cta-consent.fc-primary-button > p');
-    await expect(dialogCookies).toBeVisible();
-    await buttonConsentCookies.click();
-    await expect(dialogCookies).not.toBeVisible();
-}
