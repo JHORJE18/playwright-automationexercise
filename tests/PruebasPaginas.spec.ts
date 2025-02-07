@@ -6,7 +6,6 @@ import { aceptarCookies } from './utils';
 test.describe('Casos de prueba [6,7,25,26] - Pruebas de gestión de usuario', () => {
 
     test.beforeEach(async ({ page }) => {
-        // Go To -> https://www.automationexercise.com/
         await page.goto('/');
         await aceptarCookies(page);
     })

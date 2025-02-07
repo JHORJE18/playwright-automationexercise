@@ -19,6 +19,8 @@ Este proyecto cubre los siguientes casos de prueba disponibles en Automation Exe
 5. Registrar usuario con correo electrónico existente
 6. Formulario de contacto
 7. Verificar página de casos de prueba
+25. Verificar el desplazamiento hacia arriba con el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
+26. Verificar el desplazamiento hacia arriba sin el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
 
 ### Casos de prueba en desarrollo 🚧
 
@@ -39,8 +41,6 @@ Este proyecto cubre los siguientes casos de prueba disponibles en Automation Exe
 22. Agregar al carrito desde los artículos recomendados
 23. Verificar los detalles de la dirección en la página de pago
 24. Descargar la factura después de la orden de compra
-25. Verificar el desplazamiento hacia arriba con el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
-26. Verificar el desplazamiento hacia arriba sin el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
 
 📌 Los archivos de prueba están ubicados en la carpeta /tests.
 
