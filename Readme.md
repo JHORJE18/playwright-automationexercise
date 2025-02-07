@@ -21,14 +21,14 @@ Este proyecto cubre los siguientes casos de prueba disponibles en Automation Exe
 7. Verificar página de casos de prueba
 8. Verificar todos los productos y página de detalles del producto
 9. Buscar producto
+10. Verificar suscripción en la página de inicio
+11. Verificar suscripción en la página del carrito
 
 25. Verificar el desplazamiento hacia arriba con el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
 26. Verificar el desplazamiento hacia arriba sin el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
 
 ### Casos de prueba en desarrollo 🚧
 
-10. Verificar suscripción en la página de inicio
-11. Verificar suscripción en la página del carrito
 12. Agregar productos al carrito
 13. Verificar cantidad de productos en el carrito
 14. Realizar pedido: Registrarse durante el pago
