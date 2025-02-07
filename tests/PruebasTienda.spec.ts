@@ -5,7 +5,7 @@ import { aceptarCookies, checkPaginaInicio } from './utils';
 test.describe('Casos de prueba [8-24] - Pruebas de gestión de usuario', () => {
 
     test.beforeEach(async ({ page }) => {
-        // Go to await expect(page.locator('#slider')).toBeVisible();
+        // Go to https://automationexercise.com
         await page.goto('/');
         await aceptarCookies(page);
         await checkPaginaInicio(page);
@@ -27,6 +27,19 @@ test.describe('Casos de prueba [8-24] - Pruebas de gestión de usuario', () => {
     })
 
     test('Caso de prueba #9 - Buscar producto', async ({ page }) => {
+        const palabraBusqueda: string = 'top';
+        await page.getByRole('link', { name: ' Products' }).click();
+        await expect(page).toHaveTitle(/.*All Products.*/);
 
+        await page.getByRole('textbox', { name: 'Search Product' }).fill(palabraBusqueda);
+        await page.getByRole('button', { name: '' }).click();
+
+        await expect(page.locator('body')).toContainText('Searched Products');
+        const resultadosBusqueda = await page.locator('.product-image-wrapper').all();
+
+        // Verifica que los resultados son visibles
+        for (const elemento of resultadosBusqueda) {
+            await expect(elemento).toBeVisible();
+        }
     })
 })
