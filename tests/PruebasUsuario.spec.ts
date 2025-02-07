@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { aceptarCookies, eliminarUsuarioPruebas, cuenta, registrarUsuarioPruebas } from './utils';
+import { aceptarCookies, eliminarUsuarioPruebas, cuenta, registrarUsuarioPruebas, checkPaginaInicio } from './utils';
 
 test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
 
@@ -9,9 +9,7 @@ test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
     })
 
     test('Caso de prueba #1 - Registrar ususario', async ({ browserName, page }) => {
-        await page.waitForLoadState("domcontentloaded");
-        await expect(page.locator('#slider')).toBeVisible();
-
+        await checkPaginaInicio(page);
         const usuarioPrueba = new cuenta('1', browserName)
 
         await page.getByRole('link', { name: ' Signup / Login' }).click();
@@ -76,8 +74,7 @@ test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
     });
 
     test('Caso de prueba #2 - Inicio sesión con datos correctos ✅', async ({ browserName, page }) => {
-        await expect(page.locator('#slider')).toBeVisible();
-
+        await checkPaginaInicio(page);
         // Registro previo usuario de prueba
         const usuarioPrueba = new cuenta('2', browserName);
         await registrarUsuarioPruebas(page, usuarioPrueba);
@@ -99,9 +96,7 @@ test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
     });
 
     test('Caso de prueba #3 - Inicio sesión con datos incorrectos ❌', async ({ page }) => {
-        await page.waitForLoadState("domcontentloaded");
-        await expect(page.locator('#slider')).toBeVisible();
-
+        await checkPaginaInicio(page);
         await page.getByRole('link', { name: ' Signup / Login' }).click();
         await expect(page.getByRole('heading', { name: 'Login to your account' })).toBeVisible();
         await page.locator('form').filter({ hasText: 'Login' }).getByPlaceholder('Email Address').click();
@@ -113,7 +108,7 @@ test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
     });
 
     test('Caso de prueba #4 - Cerrar sesión de usuario', async ({ browserName, page }) => {
-        await expect(page.locator('#slider')).toBeVisible();
+        await checkPaginaInicio(page);
 
         // Registro previo usuario de prueba
         const usuarioPrueba = new cuenta('4', browserName);
@@ -139,8 +134,7 @@ test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
     });
 
     test('Caso de prueba #5 - Registrar usuario con correo electrónico existente', async ({ browserName, page }) => {
-        await expect(page.locator('#slider')).toBeVisible();
-
+        await checkPaginaInicio(page);
         // Registro previo usuario de prueba
         const usuarioPrueba = new cuenta('5', browserName);
         await registrarUsuarioPruebas(page, usuarioPrueba);

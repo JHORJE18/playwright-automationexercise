@@ -34,6 +34,11 @@ export class cuenta {
     }
 }
 
+export async function checkPaginaInicio(page) {
+    await page.waitForLoadState('domcontentloaded');
+    await expect(page.locator('#slider')).toBeVisible();
+}
+
 // Registra un usuario de pruebas para realizar pruebas
 export async function registrarUsuarioPruebas(page, usuario: cuenta) {
     await page.waitForLoadState("domcontentloaded");

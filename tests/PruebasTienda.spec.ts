@@ -12,8 +12,7 @@ test.describe('Casos de prueba [8-24] - Pruebas de gestión de usuario', () => {
 
     test('Caso de prueba #8 - Verificar todos los productos y página de detalles del producto', async ({ page }) => {
         await page.waitForLoadState('domcontentloaded');
-        await expect(page.locator('#slider')).toBeVisible();
-
+        await checkPaginaInicio(page);
         await page.getByRole('link', { name: ' Products' }).click();
         await expect(page).toHaveURL(/\/products$/);
         await expect(page).toHaveTitle(/.*All Products.*/);
@@ -26,5 +25,9 @@ test.describe('Casos de prueba [8-24] - Pruebas de gestión de usuario', () => {
         await expect(page.getByText('Availability: In Stock')).toBeVisible();
         await expect(page.getByText('Condition: New')).toBeVisible();
         await expect(page.getByText('Brand: Polo')).toBeVisible();
+    })
+
+    test('Caso de prueba #9 - Buscar producto', async ({ page }) => {
+
     })
 })

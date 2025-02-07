@@ -14,9 +14,7 @@ test.describe('Casos de prueba [6,7,25,26] - Pruebas de gestión de usuario', ()
         // Prepara archivo para subir
         const filePath = path.resolve(__dirname, '../resources/logo.png');
 
-        await page.waitForLoadState("domcontentloaded");
-        await expect(page.locator('#slider')).toBeVisible();
-
+        await checkPaginaInicio(page);
         await page.getByRole('link', { name: ' Contact us' }).click();
         await page.getByRole('textbox', { name: 'Name' }).click();
         await page.getByRole('textbox', { name: 'Name' }).fill('Manuel');
@@ -42,16 +40,13 @@ test.describe('Casos de prueba [6,7,25,26] - Pruebas de gestión de usuario', ()
     })
 
     test('Caso de prueba #7 - Verificar página de casos de prueba', async ({ page }) => {
-        await page.waitForLoadState("domcontentloaded");
-        await expect(page.locator('#slider')).toBeVisible();
-        await page.getByRole('link', { name: ' Test Cases' }).click();
+        await checkPaginaInicio(page); await page.getByRole('link', { name: ' Test Cases' }).click();
         await expect(page).toHaveURL(/.*\/test_cases/);
     })
 
     test('Caso de prueba #25 - Verificar el desplazamiento hacia arriba con el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo', async ({ page }) => {
         await page.waitForLoadState('domcontentloaded');
-        await expect(page.locator('#slider')).toBeVisible();
-        await page.locator('.grippy-host').click();
+        await checkPaginaInicio(page); await page.locator('.grippy-host').click();
         await page.locator('#footer').scrollIntoViewIfNeeded();
         await expect(page.locator('#footer')).toContainText('Subscription');
         await page.getByRole('link', { name: '' }).click();
@@ -60,8 +55,7 @@ test.describe('Casos de prueba [6,7,25,26] - Pruebas de gestión de usuario', ()
 
     test('Caso de prueba #26 - Verificar el desplazamiento hacia arriba sin el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo', async ({ page }) => {
         await page.waitForLoadState('domcontentloaded');
-        await expect(page.locator('#slider')).toBeVisible();
-        await page.locator('.grippy-host').click();
+        await checkPaginaInicio(page); await page.locator('.grippy-host').click();
         await page.locator('#footer').scrollIntoViewIfNeeded();
         await expect(page.locator('#footer')).toContainText('Subscription');
         await page.locator('#header > div > div > div > div.col-sm-4 > div > a > img').scrollIntoViewIfNeeded();
