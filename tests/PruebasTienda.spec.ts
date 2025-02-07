@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { beforeEach } from 'node:test';
-import { aceptarCookies } from './utils';
+import { aceptarCookies, checkPaginaInicio } from './utils';
 
 test.describe('Casos de prueba [8-24] - Pruebas de gestión de usuario', () => {
 
@@ -8,11 +8,10 @@ test.describe('Casos de prueba [8-24] - Pruebas de gestión de usuario', () => {
         // Go to await expect(page.locator('#slider')).toBeVisible();
         await page.goto('/');
         await aceptarCookies(page);
+        await checkPaginaInicio(page);
     })
 
     test('Caso de prueba #8 - Verificar todos los productos y página de detalles del producto', async ({ page }) => {
-        await page.waitForLoadState('domcontentloaded');
-        await checkPaginaInicio(page);
         await page.getByRole('link', { name: ' Products' }).click();
         await expect(page).toHaveURL(/\/products$/);
         await expect(page).toHaveTitle(/.*All Products.*/);
