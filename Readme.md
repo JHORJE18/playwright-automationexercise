@@ -17,11 +17,11 @@ Este proyecto cubre los siguientes casos de prueba disponibles en Automation Exe
 3. Iniciar sesión de usuario con correo electrónico y contraseña incorrectos
 4. Cerrar sesión de usuario
 5. Registrar usuario con correo electrónico existente
+6. Formulario de contacto
+7. Verificar página de casos de prueba
 
 ### Casos de prueba en desarrollo 🚧
 
-6. Formulario de contacto
-7. Verificar página de casos de prueba
 8. Verificar todos los productos y página de detalles del producto
 9. Buscar producto
 10. Verificar suscripción en la página de inicio

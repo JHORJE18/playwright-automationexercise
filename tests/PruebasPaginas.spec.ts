@@ -41,4 +41,11 @@ test.describe('Casos de prueba [6,7,25,26] - Pruebas de gestión de usuario', ()
         // Verifica página principal
         await expect(page).toHaveURL(/.*automationexercise\.com.*/);
     })
+
+    test('Caso de prueba #7 - Verificar página de casos de prueba', async ({ page }) => {
+        await page.waitForLoadState("domcontentloaded");
+        await expect(page.locator('#slider')).toBeVisible();
+        await page.getByRole('link', { name: ' Test Cases' }).click();
+        await expect(page).toHaveURL(/.*\/test_cases/);
+    })
 });
