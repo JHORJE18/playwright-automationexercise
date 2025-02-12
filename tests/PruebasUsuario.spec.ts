@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { aceptarCookies, eliminarUsuarioPruebas, cuenta, registrarUsuarioPruebas, checkPaginaInicio } from './utils';
+import { aceptarCookies, eliminarUsuarioPruebas, cuenta, registrarUsuarioPruebas, checkPaginaInicio, loginUsuario } from './utils';
 
 test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
 
@@ -82,13 +82,7 @@ test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
         await expect(page.getByRole('heading', { name: 'Login to your account' })).toBeVisible();
 
         // Formulario de inicio de sesión
-        const inputEmail = await page.locator('form').filter({ hasText: 'login' }).getByPlaceholder('Email Address')
-        const inputPassword = await page.locator('form').filter({ hasText: 'login' }).getByPlaceholder('Password')
-        await inputEmail.fill(usuarioPrueba.email);
-        await inputPassword.fill(usuarioPrueba.password);
-
-        await page.getByRole('button', { name: 'Login' }).click();
-        await expect(page.locator('#header')).toContainText(`Logged in as ${usuarioPrueba.name}`);
+        await loginUsuario(page, usuarioPrueba);
 
         // Elimina usuario de pruebas
         await eliminarUsuarioPruebas(page, usuarioPrueba, true);
@@ -99,7 +93,6 @@ test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
         await expect(page.getByRole('heading', { name: 'Login to your account' })).toBeVisible();
         await page.locator('form').filter({ hasText: 'Login' }).getByPlaceholder('Email Address').click();
         await page.locator('form').filter({ hasText: 'Login' }).getByPlaceholder('Email Address').fill('email@notexists.com');
-        await page.locator('form').filter({ hasText: 'Login' }).getByPlaceholder('Email Address').press('Tab');
         await page.getByRole('textbox', { name: 'Password' }).fill('noPassword');
         await page.getByRole('button', { name: 'Login' }).click();
         await expect(page.getByText('Your email or password is incorrect!')).toBeVisible();
@@ -114,13 +107,7 @@ test.describe('Casos de prueba [1-5] - Pruebas de gestión de usuario', () => {
         await expect(page.getByRole('heading', { name: 'Login to your account' })).toBeVisible();
 
         // Formulario de inicio de sesión
-        const inputEmail = await page.locator('form').filter({ hasText: 'login' }).getByPlaceholder('Email Address')
-        const inputPassword = await page.locator('form').filter({ hasText: 'login' }).getByPlaceholder('Password')
-        await inputEmail.fill(usuarioPrueba.email);
-        await inputPassword.fill(usuarioPrueba.password);
-
-        await page.getByRole('button', { name: 'Login' }).click();
-        await expect(page.locator('#header')).toContainText(`Logged in as ${usuarioPrueba.name}`);
+        await loginUsuario(page, usuarioPrueba);
 
         await page.getByRole('link', { name: ' Logout' }).click();
         await expect(page).toHaveURL(/\/login$/);

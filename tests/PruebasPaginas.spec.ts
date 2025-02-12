@@ -32,7 +32,8 @@ test.describe('Casos de prueba [6-11 & 25-26] - Pruebas de gestión de usuario',
         });
         await page.getByRole('button', { name: 'Submit' }).click();
 
-        await expect(page.locator('#contact-page')).toContainText('Success! Your details have been submitted successfully.');
+        const successMessageLocator = await page.locator('#contact-page');
+        await expect(successMessageLocator).toContainText('Success! Your details have been submitted successfully.');
         await page.getByRole('link', { name: ' Home' }).click();
 
         // Verifica página principal

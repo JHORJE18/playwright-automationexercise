@@ -64,6 +64,9 @@ export async function registrarUsuarioPruebas(page, usuario: cuenta, logout: boo
 
     // Validar si cuenta ya existe
     if (await page.getByText('Email Address already exist!').isVisible()) {
+        // Variante si se solicita que la cuenta permanezca login
+        if (!logout) await loginUsuario(page, usuario);
+
         return true;
     }
 
@@ -85,7 +88,7 @@ export async function registrarUsuarioPruebas(page, usuario: cuenta, logout: boo
     await page.locator('#state').fill('Estado EEUU');
     await page.locator('#city').fill('Nueva York');
     await page.locator('#zipcode').fill('20000');
-    await page.locator('#mobile_number').fill('20000');
+    await page.locator('#mobile_number').fill('666666666');
     await page.getByRole('button', { name: 'Create Account' }).click();
 
     // Verifica que la cuenta se ha creado
@@ -102,6 +105,22 @@ export async function registrarUsuarioPruebas(page, usuario: cuenta, logout: boo
     return true;
 };
 
+export async function loginUsuario(page, usuario: cuenta) {
+    if (!(await page.url()).includes('/login')) {
+        await expect(page.locator('#slider')).toBeVisible();
+        await page.getByRole('link', { name: ' Signup / Login' }).click();
+    }
+
+    const inputEmail = await page.locator('form').filter({ hasText: 'login' }).getByPlaceholder('Email Address')
+    const inputPassword = await page.locator('form').filter({ hasText: 'login' }).getByPlaceholder('Password')
+    await inputEmail.fill(usuario.email);
+    await inputPassword.fill(usuario.password);
+
+    await page.getByRole('button', { name: 'Login' }).click();
+    await expect(page.locator('#header')).toContainText(`Logged in as ${usuario.name}`);
+
+    return;
+}
 // Elimina un ususario de pruebas
 export async function eliminarUsuarioPruebas(page, usuario: cuenta, isLogged = false) {
     // Realizar login
