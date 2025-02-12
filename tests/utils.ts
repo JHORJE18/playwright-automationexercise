@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test";
 
+// Acepta las cookies de la página (Si se muestra alerta)
 export async function aceptarCookies(page) {
     // Elimina dialogo aceptación de cookies
     await page.waitForLoadState("domcontentloaded");
@@ -39,11 +40,16 @@ export async function checkPaginaInicio(page) {
     await expect(page.locator('#slider')).toBeVisible();
 }
 
-// Registra un usuario de pruebas para realizar pruebas
-export async function registrarUsuarioPruebas(page, usuario: cuenta) {
+// Registra un usuario de pruebas
+export async function registrarUsuarioPruebas(page, usuario: cuenta, logout: boolean = true) {
     await page.waitForLoadState("domcontentloaded");
-    await expect(page.locator('#slider')).toBeVisible();
-    await page.getByRole('link', { name: ' Signup / Login' }).click();
+
+    // Navega si no esta en página de registro
+    if (!(await page.url()).includes('/login')) {
+        await expect(page.locator('#slider')).toBeVisible();
+        await page.getByRole('link', { name: ' Signup / Login' }).click();
+    }
+
     await page.getByRole('heading', { name: 'New User Signup!' }).isVisible();;
 
     // Formulario de registro
@@ -71,7 +77,7 @@ export async function registrarUsuarioPruebas(page, usuario: cuenta) {
     await page.locator('#years').selectOption('1997');
 
     // Rellena formulario completo
-    await page.locator('#first_name').fill('Nombre');
+    await page.locator('#first_name').fill(usuario.name);
     await page.locator('#last_name').fill('Apellido');
     await page.locator('#company').fill('Empresa SL');
     await page.locator('#address1').fill('Calle de prueba 10');
@@ -88,11 +94,15 @@ export async function registrarUsuarioPruebas(page, usuario: cuenta) {
 
     // Verifica que se ha iniciado sesión
     await expect(page.locator('#header')).toContainText('Logged in as ' + usuario.name);
-    await page.getByRole('link', { name: ' Logout' }).click();
+
+    if (logout) {
+        await page.getByRole('link', { name: ' Logout' }).click();
+    }
 
     return true;
 };
 
+// Elimina un ususario de pruebas
 export async function eliminarUsuarioPruebas(page, usuario: cuenta, isLogged = false) {
     // Realizar login
     if (!isLogged) {

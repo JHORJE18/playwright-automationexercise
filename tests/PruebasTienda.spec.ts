@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { beforeEach } from 'node:test';
-import { aceptarCookies, checkPaginaInicio, cuenta, eliminarUsuarioPruebas } from './utils';
+import { aceptarCookies, checkPaginaInicio, cuenta, eliminarUsuarioPruebas, registrarUsuarioPruebas } from './utils';
 
 test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => {
 
@@ -90,46 +90,9 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
 
         await page.getByText('Proceed To Checkout').click();
 
-        // Proceso de registro
+        // Ejecuta proceso de registro
         await page.getByRole('link', { name: 'Register / Login' }).click();
-
-        const inputName = await page.locator('form').filter({ hasText: 'Signup' }).getByPlaceholder('Name')
-        const inputEmail = await page.locator('form').filter({ hasText: 'Signup' }).getByPlaceholder('Email Address')
-
-        await inputName.fill(usuarioPrueba.name);
-        await inputEmail.fill(usuarioPrueba.email);
-
-        await page.getByRole('button', { name: 'Signup' }).click();
-
-        /* Si la cuenta ya existe, elimina y provoca error para reiniciar la prueba */
-        if (await page.getByText('Email Address already exist!').isVisible()) {
-            await eliminarUsuarioPruebas(page, usuarioPrueba, false);
-            throw new Error('🔄 Reintentando prueba porque la cuenta ya existía.');
-        }
-
-        /* Formulario completo de registro  */
-        await page.getByRole('radio', { name: 'Mr.' }).click();
-        await page.getByRole('textbox', { name: 'Password *' }).fill(usuarioPrueba.password);
-        await page.locator('#days').selectOption('18');
-        await page.locator('#months').selectOption('December');
-        await page.locator('#years').selectOption('1997');
-        await page.locator('#first_name').fill(usuarioPrueba.name);
-        await page.locator('#last_name').fill('Apellido');
-        await page.locator('#company').fill('Empresa SL');
-        await page.locator('#address1').fill('Calle de prueba 10');
-        await page.locator('#country').selectOption('United States');
-        await page.locator('#state').fill('Estado EEUU');
-        await page.locator('#city').fill('Nueva York');
-        await page.locator('#zipcode').fill('20000');
-        await page.locator('#mobile_number').fill('666666666');
-        await page.getByRole('button', { name: 'Create Account' }).click();
-
-        // Verifica que la cuenta se ha creado
-        await expect(page.locator('b')).toContainText('Account Created!');
-        await page.getByRole('link', { name: 'Continue' }).click();
-
-        // Verifica que se ha iniciado sesión
-        await expect(page.locator('#header')).toContainText(`Logged in as ${usuarioPrueba.name}`);
+        await registrarUsuarioPruebas(page, usuarioPrueba, false);
 
         await page.getByRole('link', { name: ' Cart' }).click();
         await page.getByText('Proceed To Checkout').click();
