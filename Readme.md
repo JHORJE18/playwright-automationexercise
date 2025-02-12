@@ -26,14 +26,14 @@ Este proyecto cubre los siguientes casos de prueba disponibles en Automation Exe
 12. Agregar productos al carrito
 13. Verificar cantidad de productos en el carrito
 14. Realizar pedido: Registrarse durante el pago
+15. Realizar pedido: Registrarse antes del pago
+16. Realizar pedido: Iniciar sesión antes del pago
 
 25. Verificar el desplazamiento hacia arriba con el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
 26. Verificar el desplazamiento hacia arriba sin el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
 
 ### Casos de prueba en desarrollo 🚧
 
-15. Realizar pedido: Registrarse antes del pago
-16. Realizar pedido: Iniciar sesión antes del pago
 17. Eliminar productos del carrito
 18. Ver productos de la categoría
 19. Ver y agregar marca al carrito Productos

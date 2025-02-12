@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { beforeEach } from 'node:test';
-import { aceptarCookies, checkPaginaInicio, cuenta, eliminarUsuarioPruebas, registrarUsuarioPruebas } from './utils';
+import { aceptarCookies, checkPaginaInicio, cuenta, eliminarUsuarioPruebas, loginUsuario, registrarUsuarioPruebas } from './utils';
 
 test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => {
 
@@ -123,5 +123,104 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
 
         // Elimina cuenta usuario
         await eliminarUsuarioPruebas(page, usuarioPrueba, true);
+    })
+
+    test('Caso de prueba #15 - Realizar pedido: Registrarse antes del pago', async ({ page, browserName }) => {
+        const usuarioPrueba: cuenta = new cuenta('15', browserName);
+
+        // Registrar ususario
+        await registrarUsuarioPruebas(page, usuarioPrueba, false);
+
+        // Añadir varios productos {3}
+        const listadoProductos = await page.locator('.product-image-wrapper');
+        await listadoProductos.nth(0).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+        await listadoProductos.nth(1).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+        await listadoProductos.nth(2).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+
+        // Verificar productos en el carrito
+        await page.getByRole('link', { name: ' Cart' }).click();
+        const listadoProductosCarrito = await page.locator('tbody').getByRole('row');
+        await expect(await listadoProductosCarrito.count()).toBe(3);
+
+        await page.getByText('Proceed To Checkout').click();
+
+        // Verificar detalles dirección
+        const fichaDireccionEnvio = await page.locator('#address_delivery');
+        await expect(fichaDireccionEnvio.getByText(usuarioPrueba.name)).toBeVisible();
+        await expect(fichaDireccionEnvio.getByText('Calle de prueba 10')).toBeVisible();
+        await expect(fichaDireccionEnvio.getByText('Estado EEUU')).toBeVisible();
+        await expect(fichaDireccionEnvio.getByText('United States')).toBeVisible();
+        await expect(fichaDireccionEnvio.getByText('20000')).toBeVisible();
+        await expect(fichaDireccionEnvio.getByText('666666666')).toBeVisible();
+
+        // Veritifcar productos
+        await expect(await page.locator('tr[id]').count()).toBe(3);
+        await page.getByRole('link', { name: 'Place Order' }).click();
+
+        // Datos de pago
+        await page.locator('input[name="name_on_card"]').fill(usuarioPrueba.name);
+        await page.locator('input[name="card_number"]').fill('424242424242');
+        await page.getByRole('textbox', { name: 'ex.' }).fill('434');
+        await page.getByRole('textbox', { name: 'MM' }).fill('12');
+        await page.getByRole('textbox', { name: 'YYYY' }).fill('2025');
+        await page.getByRole('button', { name: 'Pay and Confirm Order' }).click();
+        await expect(page.getByText('Congratulations! Your order')).toBeVisible();
+
+        // Eliminar ususario
+        await eliminarUsuarioPruebas(page, usuarioPrueba, true)
+    })
+
+    test('Caso de prueba #16 - Realizar pedido: Iniciar sesión antes del pago', async ({ page, browserName }) => {
+        const usuarioPrueba: cuenta = new cuenta('15', browserName);
+
+        // Registrar ususario de pruebas
+        await registrarUsuarioPruebas(page, usuarioPrueba, true);
+
+        // Iniciar sesión
+        await loginUsuario(page, usuarioPrueba);
+
+        // Añadir varios productos {3}
+        const listadoProductos = await page.locator('.product-image-wrapper');
+        await listadoProductos.nth(0).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+        await listadoProductos.nth(1).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+        await listadoProductos.nth(2).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+
+        // Verificar productos en el carrito
+        await page.getByRole('link', { name: ' Cart' }).click();
+        const listadoProductosCarrito = await page.locator('tbody').getByRole('row');
+        await expect(await listadoProductosCarrito.count()).toBe(3);
+
+        await page.getByText('Proceed To Checkout').click();
+
+        // Verificar detalles dirección
+        const fichaDireccionEnvio = await page.locator('#address_delivery');
+        await expect(fichaDireccionEnvio.getByText(usuarioPrueba.name)).toBeVisible();
+        await expect(fichaDireccionEnvio.getByText('Calle de prueba 10')).toBeVisible();
+        await expect(fichaDireccionEnvio.getByText('Estado EEUU')).toBeVisible();
+        await expect(fichaDireccionEnvio.getByText('United States')).toBeVisible();
+        await expect(fichaDireccionEnvio.getByText('20000')).toBeVisible();
+        await expect(fichaDireccionEnvio.getByText('666666666')).toBeVisible();
+
+        // Veritifcar productos
+        await expect(await page.locator('tr[id]').count()).toBe(3);
+        await page.getByRole('link', { name: 'Place Order' }).click();
+
+        // Datos de pago
+        await page.locator('input[name="name_on_card"]').fill(usuarioPrueba.name);
+        await page.locator('input[name="card_number"]').fill('424242424242');
+        await page.getByRole('textbox', { name: 'ex.' }).fill('434');
+        await page.getByRole('textbox', { name: 'MM' }).fill('12');
+        await page.getByRole('textbox', { name: 'YYYY' }).fill('2025');
+        await page.getByRole('button', { name: 'Pay and Confirm Order' }).click();
+        await expect(page.getByText('Congratulations! Your order')).toBeVisible();
+
+        // Eliminar ususario
+        await eliminarUsuarioPruebas(page, usuarioPrueba, true)
     })
 })
