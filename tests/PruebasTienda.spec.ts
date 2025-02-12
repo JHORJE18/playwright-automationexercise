@@ -174,7 +174,7 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
     })
 
     test('Caso de prueba #16 - Realizar pedido: Iniciar sesión antes del pago', async ({ page, browserName }) => {
-        const usuarioPrueba: cuenta = new cuenta('15', browserName);
+        const usuarioPrueba: cuenta = new cuenta('16', browserName);
 
         // Registrar ususario de pruebas
         await registrarUsuarioPruebas(page, usuarioPrueba, true);
@@ -222,5 +222,27 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
 
         // Eliminar ususario
         await eliminarUsuarioPruebas(page, usuarioPrueba, true)
+    })
+
+    test('Caso de prueba #17 - Eliminar productos del carrito', async ({ page, browserName }) => {
+        // Añadir varios productos {3}
+        const listadoProductos = await page.locator('.product-image-wrapper');
+        await listadoProductos.nth(0).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+        await listadoProductos.nth(1).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+        await listadoProductos.nth(2).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+
+        // Verificar productos en el carrito
+        await page.getByRole('link', { name: ' Cart' }).click();
+        var listadoProductosCarrito = await page.locator('tbody').getByRole('row');
+        await expect(await listadoProductosCarrito.count()).toBe(3);
+
+        await listadoProductosCarrito.nth(0).locator('.cart_delete a').click();
+        await listadoProductosCarrito.nth(1).locator('.cart_delete a').click();
+        await listadoProductosCarrito.nth(2).locator('.cart_delete a').click();
+
+        await expect(page.locator('#empty_cart')).toBeVisible();
     })
 })
