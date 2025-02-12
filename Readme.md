@@ -24,13 +24,13 @@ Este proyecto cubre los siguientes casos de prueba disponibles en Automation Exe
 10. Verificar suscripción en la página de inicio
 11. Verificar suscripción en la página del carrito
 12. Agregar productos al carrito
+13. Verificar cantidad de productos en el carrito
 
 25. Verificar el desplazamiento hacia arriba con el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
 26. Verificar el desplazamiento hacia arriba sin el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
 
 ### Casos de prueba en desarrollo 🚧
 
-13. Verificar cantidad de productos en el carrito
 14. Realizar pedido: Registrarse durante el pago
 15. Realizar pedido: Registrarse antes del pago
 16. Realizar pedido: Iniciar sesión antes del pago
@@ -43,7 +43,7 @@ Este proyecto cubre los siguientes casos de prueba disponibles en Automation Exe
 23. Verificar los detalles de la dirección en la página de pago
 24. Descargar la factura después de la orden de compra
 
-📌 Los archivos de prueba están ubicados en la carpeta /tests.
+📌 Los archivos de prueba están ubicados en la carpeta ``/tests``.
 
 ## Configuración
 

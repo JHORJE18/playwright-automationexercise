@@ -44,4 +44,30 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         await expect(listadoProductosCarrito.last().locator('.cart_total p')).toContainText(precioSegundoProducto!);
     })
 
+    test('Caso de prueba #13 - Verificar cantidad de productos en el carrito', async ({ page }) => {
+        const listadoProductos = await page.locator('.product-image-wrapper');
+        const indiceAleatorio = Math.floor(Math.random() * await listadoProductos.count())
+        const productoAleatorio = listadoProductos.nth(indiceAleatorio)
+
+        await productoAleatorio.getByText('View Product').click();
+
+        // Ficha del producto
+        const productInfo = await page.locator('.product-information');
+
+        // Verifica visibilidad de detalles del producto
+        await expect(productInfo).toBeVisible();
+        await expect(productInfo.getByText('Category:')).toBeVisible();
+        await expect(productInfo.getByText('Rs.')).toBeVisible();
+        await expect(productInfo.getByText('Availability:')).toBeVisible();
+        await expect(productInfo.getByText('Condition:')).toBeVisible();
+        await expect(productInfo.getByText('Brand:')).toBeVisible();
+
+        // Añade a 4 unidades y verifica desde el carrito
+        await page.locator('#quantity').fill('4');
+        await page.getByRole('button', { name: ' Add to cart' }).click();
+        await page.getByRole('link', { name: 'View Cart' }).click();
+
+        const listadoProductosCarrito = await page.locator('tbody').getByRole('row');
+        await expect(listadoProductosCarrito.first().locator('.cart_quantity button')).toContainText('4');
+    })
 })
