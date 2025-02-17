@@ -224,7 +224,7 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         await eliminarUsuarioPruebas(page, usuarioPrueba, true)
     })
 
-    test('Caso de prueba #17 - Eliminar productos del carrito', async ({ page, browserName }) => {
+    test('Caso de prueba #17 - Eliminar productos del carrito', async ({ page }) => {
         // Añadir varios productos {3}
         const listadoProductos = await page.locator('.product-image-wrapper');
         await listadoProductos.nth(0).getByText('Add to cart').first().click();
@@ -244,5 +244,25 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         await listadoProductosCarrito.nth(2).locator('.cart_delete a').click();
 
         await expect(page.locator('#empty_cart')).toBeVisible();
+    })
+
+    test('Caso de prueba #18 - Ver productos de la categoria', async ({ page }) => {
+        await expect(page.locator('.category-products')).toBeVisible();
+
+        // Categoria Mujer
+        await page.getByRole('link', { name: ' Women' }).click();
+        const subCategoriasMujer = await page.locator('#Women').getByRole('link');
+        const indiceAleatorioMujer = Math.floor(Math.random() * await subCategoriasMujer.count())
+        const txtSubCategoriaMujer = await subCategoriasMujer.nth(indiceAleatorioMujer).textContent()
+        await subCategoriasMujer.nth(indiceAleatorioMujer).click();
+        await expect(page.getByText(`WOMEN - ${txtSubCategoriaMujer} PRODUCTS`)).toBeVisible();
+
+        // Categoria Hombre
+        await page.getByRole('link', { name: ' Men' }).click();
+        const subCategoriaHombre = await page.locator('#Men').getByRole('link');
+        const indiceAleatorioHombre = Math.floor(Math.random() * await subCategoriaHombre.count())
+        const txtSubCategoriaHombre = await subCategoriaHombre.nth(indiceAleatorioHombre).textContent();
+        await subCategoriaHombre.nth(indiceAleatorioHombre).click();
+        await expect(page.getByText(`MEN - ${txtSubCategoriaHombre} PRODUCTS`)).toBeVisible();
     })
 })
