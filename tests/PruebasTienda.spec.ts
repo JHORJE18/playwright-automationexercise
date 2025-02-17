@@ -265,4 +265,42 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         await subCategoriaHombre.nth(indiceAleatorioHombre).click();
         await expect(page.getByText(`MEN - ${txtSubCategoriaHombre} PRODUCTS`)).toBeVisible();
     })
+
+    test('Caso de prueba #19 - Ver y agregar marca al carrito Productos', async ({ page }) => {
+        await page.getByRole('link', { name: ' Products' }).click();
+        await expect(page.locator('.brands_products')).toBeVisible();
+
+        // Selecciona 1º Marca
+        const listadoMarcas = await page.locator('.brands-name').getByRole('link');
+        const indiceAleatorio = Math.floor(Math.random() * await listadoMarcas.count())
+        const txtMarca = await listadoMarcas.nth(indiceAleatorio).textContent()
+        const nombreMarca = await extraerNombreMarca(txtMarca);
+
+        await listadoMarcas.nth(indiceAleatorio).click();
+        await expect(page.getByText(`BRAND - ${nombreMarca} PRODUCTS`)).toBeVisible();
+
+        var listadoProductos = await page.locator('.product-image-wrapper').all();
+        for (const producto of listadoProductos) {
+            await expect(producto).toBeVisible();
+        }
+
+        // Selecciona otra marca
+        const indiceAleatorio2 = Math.floor(Math.random() * await listadoMarcas.count())
+        const txtMarca2 = await listadoMarcas.nth(indiceAleatorio2).textContent()
+        const nombreMarca2 = extraerNombreMarca(txtMarca2);
+        await listadoMarcas.nth(indiceAleatorio2).click();
+        await expect(page.getByText(`BRAND - ${nombreMarca2} PRODUCTS`)).toBeVisible();
+
+        listadoProductos = await page.locator('.product-image-wrapper').all();
+        for (const producto of listadoProductos) {
+            await expect(producto).toBeVisible();
+        }
+
+    })
 })
+
+function extraerNombreMarca(texto: string | null): string {
+    const regex = /\)\s*(.*)/;
+    const match = texto?.match(regex);
+    return match ? match[1] : texto || '';
+}
