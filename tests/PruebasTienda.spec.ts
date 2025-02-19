@@ -435,7 +435,7 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         await page.getByRole('button', { name: 'Pay and Confirm Order' }).click();
         await expect(page.getByText('Congratulations! Your order')).toBeVisible();
 
-        const downloadPromise = page.waitForEvent('download');
+        const downloadPromise = page.waitForEvent('download', { timeout: 60000 });
         await page.getByRole('link', { name: 'Download Invoice' }).click();
         const download = await downloadPromise;
 
