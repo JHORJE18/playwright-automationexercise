@@ -23,6 +23,7 @@ export class cuenta {
     name: string;
     email: string;
     password: string;
+    address: string;
     numberTest: string;
     browserName: string;
 
@@ -32,6 +33,7 @@ export class cuenta {
         this.name = `Prueba ${numberTest}, ${browserName}`;
         this.email = `prueba${numberTest}@${browserName}.com`;
         this.password = '123456789';
+        this.address = 'Calle de prueba 10'
     }
 }
 
@@ -83,7 +85,7 @@ export async function registrarUsuarioPruebas(page, usuario: cuenta, logout: boo
     await page.locator('#first_name').fill(usuario.name);
     await page.locator('#last_name').fill('Apellido');
     await page.locator('#company').fill('Empresa SL');
-    await page.locator('#address1').fill('Calle de prueba 10');
+    await page.locator('#address1').fill(usuario.address);
     await page.locator('#country').selectOption('United States');
     await page.locator('#state').fill('Estado EEUU');
     await page.locator('#city').fill('Nueva York');

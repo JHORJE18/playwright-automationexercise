@@ -376,4 +376,21 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         await page.locator('.modal-confirm').getByText('View cart').click();
         await expect(page.locator('#cart_info_table tbody tr')).toBeVisible();
     })
+
+    test('Caso de prueba #23 - Verificar los detalles de la dirección en la página de pago', async ({ page, browserName }) => {
+        const usuarioPrueba: cuenta = new cuenta('23', browserName);
+        await registrarUsuarioPruebas(page, usuarioPrueba, false);
+
+        // Añadir un producto al carrito y navegar
+        await page.locator('.product-image-wrapper .add-to-cart').first().click();
+        await expect(page.locator('.modal-confirm')).toBeVisible();
+        await page.locator('.modal-confirm').getByText('View cart').click();
+        await expect(page.locator('#cart_info_table tbody tr')).toBeVisible();
+
+        await page.getByText('Proceed To Checkout').click();
+        await expect(page.locator('#address_delivery').getByText(usuarioPrueba.address)).toBeVisible();
+        await expect(page.locator('#address_invoice').getByText(usuarioPrueba.address)).toBeVisible();
+
+        await eliminarUsuarioPruebas(page, usuarioPrueba, true);
+    })
 })
