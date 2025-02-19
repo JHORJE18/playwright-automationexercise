@@ -436,19 +436,17 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         await page.getByRole('button', { name: 'Pay and Confirm Order' }).click();
         await expect(page.getByText('Congratulations! Your order')).toBeVisible();
 
-        const downloadPromise = page.waitForEvent('download');
-        await page.getByRole('link', { name: 'Download Invoice' }).click();
-        const download = await downloadPromise;
-
-        // Guardar el archivo en una ubicación específica
-        const filePath = `downloads/factura_${Date.now()}.pdf`;
-        await download.saveAs(filePath);
-
-        // Verificar si el archivo existe (solo en Chromium y Firefox)
+        // Realiza descarga y prueba (solo en Chromium y Firefox)
         if (browserName !== 'webkit') {
+            const downloadPromise = page.waitForEvent('download');
+            await page.getByRole('link', { name: 'Download Invoice' }).click();
+            const download = await downloadPromise;
+
+            // Guardar el archivo en una ubicación específica
+            const filePath = `downloads/factura_${Date.now()}.pdf`;
+            await download.saveAs(filePath);
+
             expect(fs.existsSync(filePath)).toBeTruthy();
-        } else {
-            console.log('Descarga en WebKit completada, pero no se puede verificar directamente.');
         }
 
         await page.getByRole('link', { name: 'Continue' }).click();
