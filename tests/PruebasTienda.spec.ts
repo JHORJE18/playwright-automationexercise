@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { beforeEach } from 'node:test';
-import { aceptarCookies, checkPaginaInicio, cuenta, eliminarUsuarioPruebas, loginUsuario, registrarUsuarioPruebas } from './utils';
+import { aceptarCookies, checkPaginaInicio, cuenta, eliminarUsuarioPruebas, extraerNombreMarca, loginUsuario, registrarUsuarioPruebas } from './utils';
 
 test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => {
 
@@ -274,7 +274,7 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         const listadoMarcas = await page.locator('.brands-name').getByRole('link');
         const indiceAleatorio = Math.floor(Math.random() * await listadoMarcas.count())
         const txtMarca = await listadoMarcas.nth(indiceAleatorio).textContent()
-        const nombreMarca = await extraerNombreMarca(txtMarca);
+        const nombreMarca = await extraerNombreMarca(txtMarca)
 
         await listadoMarcas.nth(indiceAleatorio).click();
         await expect(page.getByText(`BRAND - ${nombreMarca} PRODUCTS`)).toBeVisible();
@@ -297,10 +297,55 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         }
 
     })
-})
 
-function extraerNombreMarca(texto: string | null): string {
-    const regex = /\)\s*(.*)/;
-    const match = texto?.match(regex);
-    return match ? match[1] : texto || '';
-}
+    test('Caso de prueba #20 - Buscar productos y verificar carrito después de iniciar sesión', async ({ page, browserName }) => {
+        const palabraBusqueda = 'Blue';
+        const ususarioPrueba = new cuenta('20', browserName);
+        await registrarUsuarioPruebas(page, ususarioPrueba, true);
+
+        await page.getByRole('link', { name: ' Products' }).click();
+        await expect(page).toHaveURL(/\/products$/);
+        await expect(page).toHaveTitle(/.*All Products.*/);
+        await expect(page.getByText('All Products')).toBeVisible();
+
+        // Realizar busqueda
+        await page.getByRole('textbox', { name: 'Search Product' }).fill(palabraBusqueda);
+        await page.locator('#submit_search').click();
+
+        await expect(page.getByRole('heading', { name: 'Searched Products' })).toBeVisible();
+        const listaResultados = await page.locator('.product-image-wrapper').all();
+
+        for (const producto of listaResultados) {
+            // Verifica nombre producto correcto de la busqueda
+            const nombreProducto = await producto.locator('.productinfo p').textContent();
+            await expect(nombreProducto?.toLowerCase()).toContain(palabraBusqueda.toLowerCase());
+
+            // Añade el producto al carrito
+            await producto.locator('.productinfo a').click();
+            await expect(page.locator('.modal-confirm')).toBeVisible();
+            await page.getByRole('button', { name: 'Continue Shopping' }).click();
+        }
+
+        await page.getByRole('link', { name: ' Cart' }).click();
+
+        // Verificar proudctos carrito
+        var carrito = await page.locator('#cart_info_table tbody tr').all();
+        for (const producto of carrito) {
+            expect(producto).toBeVisible();
+            const nombreProducto = await producto.locator('.cart_description a').textContent();
+            await expect(nombreProducto?.toLowerCase()).toContain(palabraBusqueda.toLowerCase());
+        }
+
+        await loginUsuario(page, ususarioPrueba);
+
+        await page.getByRole('link', { name: ' Cart' }).click();
+
+        // Verificar proudctos carrito
+        carrito = await page.locator('#cart_info_table tbody tr').all();
+        for (const producto of carrito) {
+            expect(producto).toBeVisible();
+            const nombreProducto = await producto.locator('.cart_description a').textContent();
+            await expect(nombreProducto?.toLowerCase()).toContain(palabraBusqueda.toLowerCase());
+        }
+    })
+})

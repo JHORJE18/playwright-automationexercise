@@ -107,7 +107,6 @@ export async function registrarUsuarioPruebas(page, usuario: cuenta, logout: boo
 
 export async function loginUsuario(page, usuario: cuenta) {
     if (!(await page.url()).includes('/login')) {
-        await expect(page.locator('#slider')).toBeVisible();
         await page.getByRole('link', { name: ' Signup / Login' }).click();
     }
 
@@ -145,3 +144,10 @@ export async function eliminarUsuarioPruebas(page, usuario: cuenta, isLogged = f
 
     return true;
 };
+
+// Función para extraer nombre de marca
+export function extraerNombreMarca(texto: string | null): string {
+    const regex = /\)\s*(.*)/;
+    const match = texto?.match(regex);
+    return match ? match[1] : texto || '';
+}
