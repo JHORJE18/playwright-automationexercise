@@ -100,7 +100,7 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         // Verificar detalles dirección
         const fichaDireccionEnvio = await page.locator('#address_delivery');
         await expect(fichaDireccionEnvio.getByText(usuarioPrueba.name)).toBeVisible();
-        await expect(fichaDireccionEnvio.getByText('Calle de prueba 10')).toBeVisible();
+        await expect(fichaDireccionEnvio.getByText(usuarioPrueba.address)).toBeVisible();
         await expect(fichaDireccionEnvio.getByText('Estado EEUU')).toBeVisible();
         await expect(fichaDireccionEnvio.getByText('United States')).toBeVisible();
         await expect(fichaDireccionEnvio.getByText('20000')).toBeVisible();
@@ -391,6 +391,63 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         await expect(page.locator('#address_delivery').getByText(usuarioPrueba.address)).toBeVisible();
         await expect(page.locator('#address_invoice').getByText(usuarioPrueba.address)).toBeVisible();
 
+        await eliminarUsuarioPruebas(page, usuarioPrueba, true);
+    })
+
+    test('Caso de prueba #24 - Descargar la factura después de la orden de compra', async ({ page, browserName }) => {
+        const usuarioPrueba: cuenta = new cuenta('24', browserName);
+
+        // Añadir varios productos {3}
+        const listadoProductos = await page.locator('.product-image-wrapper');
+        await listadoProductos.nth(0).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+        await listadoProductos.nth(1).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+        await listadoProductos.nth(2).getByText('Add to cart').first().click();
+        await page.getByRole('button', { name: 'Continue Shopping' }).click();
+
+        // Verificar productos en el carrito
+        await page.getByRole('link', { name: ' Cart' }).click();
+        const listadoProductosCarrito = await page.locator('tbody').getByRole('row');
+        await expect(await listadoProductosCarrito.count()).toBe(3);
+
+        await page.getByText('Proceed To Checkout').click();
+
+        // Ejecuta proceso de registro
+        await page.getByRole('link', { name: 'Register / Login' }).click();
+        await registrarUsuarioPruebas(page, usuarioPrueba, false);
+
+        await page.getByRole('link', { name: ' Cart' }).click();
+        await page.getByText('Proceed To Checkout').click();
+
+        // Veritifcar productos
+        await expect(await page.locator('tr[id]').count()).toBe(3);
+
+        // Ingresar comentarios y realizar pedido
+        await page.locator('textarea[name="message"]').fill('Comentarios adicionales del pedido');
+        await page.getByRole('link', { name: 'Place Order' }).click();
+
+        await page.locator('input[name="name_on_card"]').fill(usuarioPrueba.name);
+        await page.locator('input[name="card_number"]').fill('424242424242');
+        await page.getByRole('textbox', { name: 'ex.' }).fill('434');
+        await page.getByRole('textbox', { name: 'MM' }).fill('12');
+        await page.getByRole('textbox', { name: 'YYYY' }).fill('2025');
+        await page.getByRole('button', { name: 'Pay and Confirm Order' }).click();
+        await expect(page.getByText('Congratulations! Your order')).toBeVisible();
+
+        const downloadPromise = page.waitForEvent('download');
+        await page.getByRole('link', { name: 'Download Invoice' }).click();
+        const download = await downloadPromise;
+
+        // Verificar si la factura se ha descargado
+        const rutaArchivo = 'downloads/factura.pdf';
+        await download.saveAs(rutaArchivo)
+        const fs = require('fs');
+        expect(fs.existsSync(rutaArchivo)).toBeTruthy();
+
+        await page.getByRole('link', { name: 'Continue' }).click();
+
+        // Elimina cuenta usuario
         await eliminarUsuarioPruebas(page, usuarioPrueba, true);
     })
 })
