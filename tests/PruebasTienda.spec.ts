@@ -348,4 +348,22 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
             await expect(nombreProducto?.toLowerCase()).toContain(palabraBusqueda.toLowerCase());
         }
     })
+
+    test('Caso de prueba #21 - Agregar una reseña sobre el producto', async ({ page, browserName }) => {
+        const ususarioPrueba = new cuenta('21', browserName);
+
+        await page.getByRole('link', { name: ' Products' }).click();
+        await expect(page).toHaveURL(/\/products$/);
+        await expect(page).toHaveTitle(/.*All Products.*/);
+        await expect(page.getByText('All Products')).toBeVisible();
+
+        await page.getByText('View product').first().click();
+        await expect(page.getByRole('link', { name: 'Write Your Review' })).toBeVisible();
+        await page.getByRole('textbox', { name: 'Your Name' }).fill(ususarioPrueba.name);
+        await page.getByRole('textbox', { name: 'Email Address', exact: true }).fill(ususarioPrueba.email);
+        await page.getByRole('textbox', { name: 'Add Review Here!' }).fill('Reseña de prueba desde ' + browserName);
+
+        await page.getByRole('button', { name: 'Submit' }).click();
+        await expect(page.getByText('Thank you for your review.')).toBeVisible();
+    })
 })

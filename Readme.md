@@ -32,14 +32,13 @@ Este proyecto cubre los siguientes casos de prueba disponibles en Automation Exe
 18. Ver productos de la categoría
 19. Ver y agregar marca al carrito Productos
 20. Buscar productos y verificar el carrito después de iniciar sesión
+21. Agregar una reseña sobre el producto
 
 25. Verificar el desplazamiento hacia arriba con el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
 26. Verificar el desplazamiento hacia arriba sin el botón de "Flecha" y la funcionalidad de desplazamiento hacia abajo
 
 ### Casos de prueba en desarrollo 🚧
 
-20. Buscar productos y verificar el carrito después de iniciar sesión
-21. Agregar una reseña sobre el producto
 22. Agregar al carrito desde los artículos recomendados
 23. Verificar los detalles de la dirección en la página de pago
 24. Descargar la factura después de la orden de compra
