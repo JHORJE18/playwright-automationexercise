@@ -366,4 +366,14 @@ test.describe('Casos de prueba [12-24] - Pruebas de gestión de usuario', () => 
         await page.getByRole('button', { name: 'Submit' }).click();
         await expect(page.getByText('Thank you for your review.')).toBeVisible();
     })
+
+    test('Caso de prueba #22 - Agregar al carrito desde los artículos recomendados', async ({ page }) => {
+        const seccionRecomendados = await page.locator('.recommended_items');
+        await seccionRecomendados.scrollIntoViewIfNeeded();
+        await expect(seccionRecomendados.getByText('Recommended items')).toBeVisible();
+        await seccionRecomendados.locator('.add-to-cart').last().click();
+        await expect(page.locator('.modal-confirm')).toBeVisible();
+        await page.locator('.modal-confirm').getByText('View cart').click();
+        await expect(page.locator('#cart_info_table tbody tr')).toBeVisible();
+    })
 })
